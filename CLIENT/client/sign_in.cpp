@@ -67,6 +67,7 @@ void sign_in::slot_sign_in_verify(msg_t *msg)
     {
         //该账号已登录
         this->ui->pushButton_sign_in->setEnabled(true);
+        QMessageBox::information(this,tr("错误"),tr("账号已登录"));
     }
     else
     {

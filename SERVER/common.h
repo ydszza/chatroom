@@ -1,7 +1,7 @@
 #ifndef __COMMON_H
 #define __COMMON_H
 
-#define SERVER_ADDR     "192.168.124.2"
+#define SERVER_ADDR     "192.168.124.5"
 #define SERVER_PORT     12345
 
 //接收的消息格式

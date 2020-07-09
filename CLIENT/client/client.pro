@@ -18,14 +18,16 @@ SOURCES += main.cpp\
     chat.cpp \
     msg_t.cpp \
     list.cpp \
-    mgs_manage.cpp
+    mgs_manage.cpp \
+    creat_account.cpp
 
 HEADERS  += sign_in.h\
     home.h \
     chat.h \
     msg_t.h \
     list.h \
-    mgs_manage.h
+    mgs_manage.h \
+    creat_account.h
 
 FORMS    += sign_in.ui
 CONFIG   +=c++11

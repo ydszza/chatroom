@@ -84,6 +84,8 @@ void msg_manage::slot_read_data()
     case 2: emit signal_get_new_msg(msg);
             break;
 
+    case 3: emit signal_creat_account(msg);
+            break;
     //其他
     default: break;
     }

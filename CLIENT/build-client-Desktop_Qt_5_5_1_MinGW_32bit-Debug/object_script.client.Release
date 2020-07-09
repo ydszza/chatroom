@@ -1,0 +1,13 @@
+INPUT(
+./release\main.o
+./release\sign_in.o
+./release\home.o
+./release\chat.o
+./release\msg_t.o
+./release\list.o
+./release\mgs_manage.o
+./release\moc_sign_in.o
+./release\moc_home.o
+./release\moc_chat.o
+./release\moc_mgs_manage.o
+);

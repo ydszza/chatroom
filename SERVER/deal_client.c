@@ -93,30 +93,46 @@ int verify_client(int sock_fd)
         return -1;
     }
     printf("获取帐号密码\n");
-    // printf("account=%s\n", recv_msg.account);
-    // printf("password=%s\n", recv_msg.password);
-    // printf("data=%s\n", recv_msg.data);
+    
+    struct send_message_t send_msg;
+    //检查是否为注册账号信息
+    if(memcmp(recv_msg.data, "create", 7) == 0){
+        printf("注册账号信息\n");
+        memset(&send_msg, 0, sizeof(send_msg));
+        send_msg.flag = 3;//回复注册消息标志
+        memcpy(send_msg.account, "1454865804", 10);//无用消息
+        memcpy(send_msg.data, "hello yds!", 11);//无用消息
+        ret = my_sqlite3_insert(recv_msg.account, recv_msg.password);
+        if(ret < 0){
+            //回复注册失败信息
+            send_msg.verify = 1;//表示注册失败
+            server_send(sock_fd, &send_msg);
+            return -1;
+        }else{
+            //回复注册成功
+            send_msg.verify = 0;//表示注册成功
+            server_send(sock_fd, &send_msg);
+        }
+    }
 
-    //验证账号密码
-    //成功返回1，失败返回-1
-    //.....
-
-    //处理验证结果
-    if(0){    //验证失败
-        printf("failed\n");
+    //验证
+    memset(&send_msg, 0,sizeof(send_msg));
+    if(verify_client_password(&recv_msg) != 0) {
+        //验证失败
+        send_msg.flag = 0;//验证账号回复标志
+        send_msg.verify = -1;//0验证成功，1已登录，-1其他失败
+        memcpy(send_msg.account, "1454865804", 10);
+        memcpy(send_msg.data, "hello yds!", 11);
+        ret = server_send(sock_fd, &send_msg);
+        printf("验证失败回复client\n");
         return -1;
     }
-    //验证成功
-    printf("验证成功回复client\n");
-    struct send_message_t send_msg;
-    memset(&send_msg, 0,sizeof(send_msg));
     send_msg.flag = 0;//验证账号回复标志
     send_msg.verify = 0;//0验证成功，1已登录，-1其他失败
     memcpy(send_msg.account, "1454865804", 10);
     memcpy(send_msg.data, "hello yds!", 11);
-    // printf("帐号：%s\n",send_msg.account);
-    // printf("内容：%s\n",send_msg.data);
     ret = server_send(sock_fd, &send_msg);
+    printf("验证成功回复client\n");
     if(ret < 0){
         return -1;
     }
@@ -318,4 +334,48 @@ void sync_online_members_to_client(int sock_fd)
         member = member->next;
     }
     printf("同步在线人数完成\n");
+}
+
+/**
+ * 功能：登录验证
+ * 参数msg：接收到的账号密码消息
+ * 返回值：成功返回0，失败返回-1
+*/
+int verify_client_password(struct recv_message_t *msg)
+{
+    //根据账号查询数据库
+    char *password = NULL;
+    password = my_sqlite3_find(msg->account);
+    if(password == NULL){
+        printf("账号不存在\n");
+        return -1;
+    }
+    //比较查询结果的账号密码与接收的账号密码是否匹配
+    if(memcmp(password, msg->password, 10) != 0){
+        printf("密码错误\n");
+        return -1;
+    }
+    //匹配返回0，不匹配返回-1
+    return 0;
+}
+
+/**
+ * 功能：注册账号
+ * 参数msg：接收到的账号密码消息
+ * 返回值：成功返回0，失败返回-1
+*/
+int creat_account(struct recv_message_t *msg)
+{
+    //根据账号查询数据库是否已经存在账号
+     if(my_sqlite3_find(msg->account) != NULL){
+         printf("已经存在该账号！\n");
+         return -1;
+     }
+    //不存在，在数据库插入账号密码信息
+    if(my_sqlite3_insert(msg->account, msg->password) != 0){
+        printf("写入数据库失败\n");
+        return -1;
+    }
+    printf("注册成功\n");
+    return 0;
 }

@@ -6,7 +6,7 @@
 #include <QTcpSocket>
 #include "msg_t.h"
 
-#define SERVER_IP   "192.168.124.2"
+#define SERVER_IP   "192.168.124.5"
 #define PORT        12345
 
 class msg_manage : public QThread
@@ -26,6 +26,7 @@ signals:
     void signal_sign_in_verify(msg_t *);
     void signal_add_or_out_newclient(msg_t *);
     void signal_get_new_msg(msg_t *);
+    void signal_creat_account(msg_t *);
 
 public slots:
     void slot_sign_in(QString account_t, QString password_t);
