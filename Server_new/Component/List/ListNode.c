@@ -1,7 +1,7 @@
 #include "ListNode.h"
 
 /*创建节点*/
-ListNode* create_list_node(int socket, char* account, char* nick_name)
+static ListNode* create_list_node(int socket, char* account, char* nick_name)
 {
     if(socket < 0 || account == NULL || nick_name == NULL){
         printf("invalid data\n");
@@ -76,49 +76,50 @@ int del_list_node(ListNode** p_head, ListNode* p_to_be_deleted)
 void print_list(ListNode* p_head)
 {
     ListNode* p_node = p_head;
-    printf("\nshow list node start\n");
-    while(p_node != NULL){
+    printf("\n\nshow list node start\n");
+    if(!p_node) printf("is empty\n");
+    while(p_node){
         printf("sock_fd = %d\t account = %s\t nick_name = %s\n",
                 p_node->sock_fd, p_node->account, p_node->nick_name);
         p_node = p_node->next;
     }
-    printf("show list node end\n");
+    printf("show list node end\n\n");
 }
 
 /**
- * 在列表中查找节点并执行对应操作
+ * 在列表中查找节点fd
  * 成功返回0,失败-1
  */
-int find_to_dosomething(ListNode* p_head, char* account, void* (*callback)(void * arg))
+int find_fd_in_list(ListNode* p_head, char* account)
 {
-    if(p_head == NULL || account == NULL || callback == NULL){
+    if(p_head == NULL || account == NULL){
         return -1;
     }
     ListNode* p_node = p_head;
-    while(p_node != NULL){
+    while(p_node){
         if(strcmp(p_node->account, account) == 0){
-            (*callback)(&(p_node->sock_fd));
-            return 0;
+            return p_node->sock_fd;
         }
     }
     return -1;
 }
 
 /**
- * 遍历列表执行操作
- * 成功返回0,失败-1
+ * 链表销毁
 */
-int traversing_list_dosomething(ListNode* p_head, void* (*callback)(void * arg))
+void list_destroy(ListNode** p_head)
 {
-    if(!p_head || !callback){
-        return -1;
+    if(!p_head) return;
+
+    ListNode* p_node = NULL;
+    while((*p_head)) {
+        p_node = *p_head;
+        *p_head = (*p_head)->next;
+        free(p_node);
+        p_node = NULL;
     }
-    ListNode* p_node = p_head;
-    while(p_node != NULL){
-        (*callback)(&(p_node->sock_fd));
-    }
-    return 0;
 }
+
 #if 0
 /*test code*/
 void test(char* test_name, ListNode* p_head)

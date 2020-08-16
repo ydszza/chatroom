@@ -6,7 +6,7 @@
 #include <QTcpSocket>
 #include "msg_t.h"
 
-#define SERVER_IP   "47.98.250.215"
+#define SERVER_IP   "127.0.0.1"
 #define PORT        12345
 
 class msg_manage : public QThread

@@ -5,6 +5,8 @@
 #include <stdio.h>
 #include <sqlite3.h>
 #include <string.h>
+#include "../../Project/Config.h"
+
 
 typedef struct user_info_t {
     char account[20];
@@ -18,7 +20,6 @@ enum mode{
 };
 
 
-static int callback(void *data, int argc, char **argv, char **azColName);
 user_info* sqlite3_find(char *account);
 int sqlite3_insert(user_info* info);
 int sqlite3_update(user_info* info, enum mode mod);

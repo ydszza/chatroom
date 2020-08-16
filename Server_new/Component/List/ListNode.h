@@ -17,12 +17,11 @@ typedef struct ListNode_t{
     struct ListNode_t *next;
 } ListNode;
 
-ListNode* create_list_node(int socket, char* account, char* nick_name);
 ListNode* add_node_to_list(ListNode** p_head, int sock_fd, char* account, char* nick_name);
 int del_list_node(ListNode** p_head, ListNode* p_to_be_deleted);
 void print_list(ListNode* p_head);
-int find_to_dosomething(ListNode* p_head, char* account, void* (*callback)(void * arg));
-int traversing_list_dosomething(ListNode* p_head, void* (*callback)(void * arg));
+int find_fd_in_list(ListNode* p_head, char* account);
+void list_destroy(ListNode** p_head);
 
 
 

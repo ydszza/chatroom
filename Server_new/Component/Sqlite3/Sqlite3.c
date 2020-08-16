@@ -7,9 +7,9 @@
 */
 static int callback(void *data, int argc, char **argv, char **azColName)
 {
-    printf("callback\n");
+    //printf("callback\n");
     user_info** info = (user_info**)data;
-    int i;
+    //int i;
     // for (i = 0;i<argc;i++) {
     //     printf("%s = %s\n", azColName[i],argv[i] ? argv[i] : "NULL");
     //     strcpy(data, argv[i]);
@@ -42,13 +42,13 @@ user_info* sqlite3_find(char *account)
     //sql操作语句
     char sql[1024];
     sprintf(sql, "select * from USER_INFO where account = %s;", account);
-    printf("sqlite3 find func \n%s\n", sql);
+    //printf("sqlite3 find func \n%s\n", sql);
     sqlite3 *db;
     char *zErr = NULL;
     int rc;
 
     //打开数据库
-    rc = sqlite3_open("../../Project/ChatRoom.db", &db);
+    rc = sqlite3_open(PATH, &db);
     if( rc!=SQLITE_OK ){
         fprintf(stderr, "sqlite3 find func open database error: %s\n", sqlite3_errmsg(db));
         return NULL;
@@ -85,7 +85,7 @@ int sqlite3_insert(user_info* info)
     char *zErr = NULL;
     int rc;
     //打开数据库
-    rc = sqlite3_open("../../Project/ChatRoom.db", &db);
+    rc = sqlite3_open(PATH, &db);
     if( rc!=SQLITE_OK ){
         fprintf(stderr, "sqlite3 insert func open database error: %s\n", sqlite3_errmsg(db));
         return -1;
@@ -94,7 +94,7 @@ int sqlite3_insert(user_info* info)
     //sql操作语句
     char sql[1024];
     sprintf(sql, "insert into USER_INFO values ('%s','%s','%s');", info->account, info->password, info->nick_name);
-    printf("sqlite3 insert func sql:\n%s\n", sql);
+    //printf("sqlite3 insert func sql:\n%s\n", sql);
 
     //执行插入语句
     rc = sqlite3_exec(db, sql, NULL, NULL, &zErr);
@@ -127,7 +127,7 @@ int sqlite3_update(user_info* info, enum mode mod)
         int rc;
 
         //打开数据库
-        rc = sqlite3_open("../../Project/ChatRoom.db", &db);
+        rc = sqlite3_open(PATH, &db);
         if( rc!=SQLITE_OK ){
             fprintf(stderr, "sqlite3 updata func open database error: %s\n", sqlite3_errmsg(db));
             return -1;
@@ -142,7 +142,7 @@ int sqlite3_update(user_info* info, enum mode mod)
             sprintf(sql, "update USER_INFO set nickname = '%s' where account = '%s';",
                         info->nick_name, info->account);
         }
-        printf("sqlite3 updata func sql:\n%s\n", sql);
+        //printf("sqlite3 updata func sql:\n%s\n", sql);
 
         //执行修改语句
         rc = sqlite3_exec(db, sql, NULL, NULL, &zErr);
@@ -177,7 +177,7 @@ int sqlite3_delete(user_info* info)
     char *zErr = NULL;
     int rc;
     //打开数据库
-    rc = sqlite3_open("../../Project/ChatRoom.db", &db);
+    rc = sqlite3_open(PATH, &db);
     if( rc!=SQLITE_OK ){
         fprintf(stderr, "sqlite3 delete func open database error: %s\n", sqlite3_errmsg(db));
         return -1;
@@ -186,7 +186,7 @@ int sqlite3_delete(user_info* info)
     //sql操作语句
     char sql[1024];
     sprintf(sql, "delete from USER_INFO where account = '%s'", info->account);
-    printf("sqlite3 delete func sql:\n%s\n", sql);
+    //printf("sqlite3 delete func sql:\n%s\n", sql);
 
     //执行插入语句
     rc = sqlite3_exec(db, sql, NULL, NULL, &zErr);

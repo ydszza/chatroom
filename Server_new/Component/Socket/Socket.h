@@ -15,17 +15,7 @@
 #include "../../Project/Config.h"
 #include "../List/ListNode.h"
 #include "../UserManage/UserManage.h"
-
-struct fd_info {
-    int sock_fd;
-    int epoll_fd;
-    unsigned int event;
-    void* (*callback)(void * arg);
-    char* buf;
-    int len;
-    ListNode* node;
-    ListNode** head;
-};
+#include "../Epoll/Epoll.h"
 
 
 /*转发的聊天消息*/
@@ -35,6 +25,9 @@ typedef struct message_t {
     char to_user[20];
     char data[1024];
 } message;
+
+#define TO_ALL                 "0000000000"
+
 
 /*接收的消息头和回复各类验证消息*/
 /*使用 unsigned char flag;*/
@@ -49,14 +42,14 @@ typedef struct message_t {
 /*接受发送消息类型*/
 #define REGISTER                (1<<0)
 #define SIGN_IN                 (1<<1) 
-#define CHANGE_USERINFO         (1<<2)
+#define UPDATE_USERINFO         (1<<2)
 #define RECV_MSG                (1<<3)
 
 
 
 
 
-int socket_init_to_listen(int* epoll_fd, ListNode** head);
+int server_init(int epoll_fd, ListNode** head);
 void* socket_accept(void* arg);
 void* socket_recv(void* arg);
 void* socket_send(void* arg);

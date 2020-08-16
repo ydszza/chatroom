@@ -38,10 +38,10 @@ int sign_in(user_info* info)
     }
     //核对密码
     if(strcmp(info->password, result->password) != 0){
-        printf("user password mismatch\n");
+        //printf("user password mismatch\n");
         return -1;
     }else{
-        printf("user password is correct\n");
+        printf("user password is match\n");
         strcpy(info->nick_name, result->nick_name);
         free(result);
         result = NULL;

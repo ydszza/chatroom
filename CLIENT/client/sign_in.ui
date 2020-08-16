@@ -38,7 +38,7 @@
      <x>110</x>
      <y>90</y>
      <width>165</width>
-     <height>22</height>
+     <height>26</height>
     </rect>
    </property>
    <layout class="QHBoxLayout" name="horizontalLayout">
@@ -64,7 +64,7 @@
      <x>110</x>
      <y>130</y>
      <width>165</width>
-     <height>22</height>
+     <height>26</height>
     </rect>
    </property>
    <layout class="QHBoxLayout" name="horizontalLayout_2">

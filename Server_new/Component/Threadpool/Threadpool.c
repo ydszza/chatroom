@@ -75,7 +75,7 @@ struct threadpool* threadpool_create(int thread_max_num, int thread_min_num, int
             printf("work thread create failed in %s\n", __func__);
             goto ERR_CREATE_THREAD;
         }
-        printf("start thread 0x%lx...\n", pool->p_threads[i]);
+        //printf("start thread 0x%lx...\n", pool->p_threads[i]);
     }
     
     //初始化管理者线程
@@ -83,9 +83,9 @@ struct threadpool* threadpool_create(int thread_max_num, int thread_min_num, int
         printf(" thread_admin create failed in %s\n", __func__);
         goto ERR_CREATE_MANAGE_THREAD;
     }
-    printf("start thread manage 0x%lx...\n", pool->thread_manage_id);
+    //printf("start thread manage 0x%lx...\n", pool->thread_manage_id);
 
-    printf("threadpool create successful!\n\n");
+    printf("\nthreadpool create successful!\n");
     return pool;
 
 ERR_CREATE_MANAGE_THREAD:
@@ -126,7 +126,7 @@ int threadpool_add_task(struct threadpool* pool, void* (*callback)(void *arg), v
         printf("param is NULL in %s\n", __func__);
         return -1;
     }
-
+    //printf("start add task\n");
     //pool上锁
     pthread_mutex_lock(&(pool->mutex_pool));
     //当任务队列满且线程池未关闭,阻塞
@@ -253,7 +253,7 @@ void* threadpool_func(void* arg)
         //任务队列为空且线程池为关闭时阻塞在此等待
         //唤醒条件为有任务需要处理/需要减少线程/线程池准备关闭
         while(pool->tasks_cur_num == 0 && !(pool->shutdown)){
-            printf("thread 0x%lx waiting...\n", pthread_self());
+            //printf("thread 0x%lx waiting...\n", pthread_self());
             //因条件变量阻塞后，会自动解锁，唤醒后会自动加锁
             pthread_cond_wait(&(pool->tasks_not_empty), &(pool->mutex_pool));
 
@@ -300,13 +300,13 @@ void* threadpool_func(void* arg)
 
         pthread_mutex_unlock(&(pool->mutex_pool));
 
-        printf("thread 0x%lx start to work\n", pthread_self());
+        //printf("thread 0x%lx start to work\n", pthread_self());
         pthread_mutex_lock(&(pool->mutex_busy_thread_num));
         pool->thread_busy_num++;
         pthread_mutex_unlock(&(pool->mutex_busy_thread_num));
         //获取完任务，执行任务
         (*(p_task->callback))(p_task->arg);
-        printf("thread 0x%lx end to work\n", pthread_self());
+        //printf("thread 0x%lx end to work\n", pthread_self());
         pthread_mutex_lock(&(pool->mutex_busy_thread_num));
         //忙线程+1
         pool->thread_busy_num--;
